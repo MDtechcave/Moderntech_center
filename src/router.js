@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HrHome from './components/HrHome.vue';
 import About from './components/About.vue';
+
 import Payslip from './components/Payslip.vue';
 import employees from './components/employees.vue';
 import attendance from './components/attendance.vue';

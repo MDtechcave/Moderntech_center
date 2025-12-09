@@ -1,5 +1,6 @@
 <template>
-    <div class ="about-page">
+
+     <div class ="about-page">
     <div class="hero-section"></div>
     <h1>About Staff Sync</h1>
     <p>Streamlining HR operations for the modern workplace</p>
@@ -41,9 +42,8 @@
     <p>This platform is designed for the HR managers, administrators and small to medium-sized organizations.</p>
     </div>
 
-
-</template>
-<script>
+ </template> 
+ <script>
 export default{
     name: "About"
 }
@@ -70,4 +70,4 @@ export default{
 .about ul {
     margin-left: 20px;
 }
-</style>
+</style> 

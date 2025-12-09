@@ -1,70 +1,5 @@
-<template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Monthly Payroll</h1>
-    <div v-for="employee in payrollData" :key="employee.employeeId" class="border rounded-lg p-4 mb-4 shadow-md">
-      <h2 class="text-xl font-semibold">{{ employee.name }}</h2>
-      <p><strong>Department:</strong> {{ employee.department }}</p>
-      <p><strong>Position:</strong> {{ employee.position }}</p>
-      <p><strong>Days Worked:</strong> {{ employee.daysWorked }}</p>
-      <p><strong>Approved Leave Days:</strong> {{ employee.approvedLeaveDays }}</p>
-      <p class="mt-2 font-bold"><strong>Monthly Salary:</strong> ZAR {{ employee.salary.toLocaleString() }}</p>
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-  name: "Payroll",
-  data() {
-    return {
-      // Flattened employee data
-      employees: [
-        { employeeId: 1, name: "Sibongile Nkosi", department: "Development", position: "Software Engineer", salary: 70000 },
-        { employeeId: 2, name: "Lungile Moyo", department: "HR", position: "HR Manager", salary: 80000 },
-        { employeeId: 3, name: "Thabo Molefe", department: "QA", position: "Quality Analyst", salary: 55000 },
-        // add the rest...
-      ],
-
-      // Flattened attendance and leave data
-      attendanceAndLeave: [
-        { employeeId: 1, attendance: ["Present","Absent","Present","Present","Present"], leaveRequests: [{ status: "Approved" }, { status: "Pending" }] },
-        { employeeId: 2, attendance: ["Present","Present","Absent","Present","Present"], leaveRequests: [{ status: "Denied" }, { status: "Approved" }] },
-        { employeeId: 3, attendance: ["Present","Present","Present","Absent","Present"], leaveRequests: [{ status: "Approved" }, { status: "Pending" }] },
-        // add the rest...
-      ]
-    };
-  },
-  computed: {
-    payrollData() {
-      return this.employees.map(emp => {
-        const record = this.attendanceAndLeave.find(a => a.employeeId === emp.employeeId) || { attendance: [], leaveRequests: [] };
-        const daysWorked = record.attendance.filter(a => a === "Present").length;
-        const approvedLeaveDays = record.leaveRequests.filter(l => l.status === "Approved").length;
-        return {
-          ...emp,
-          daysWorked,
-          approvedLeaveDays
-        };
-      });
-    }
-  }
-};
-</script>
-
-<style scoped>
-.border { border: 1px solid #ccc; }
-.rounded-lg { border-radius: 8px; }
-.p-4 { padding: 1rem; }
-.mb-4 { margin-bottom: 1rem; }
-.shadow-md { box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.text-xl { font-size: 1.25rem; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-</style>
-
-
-<!-- <template> -->
-  <!-- <div class="p-6">
+<template> 
+   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Monthly Payroll</h1>
     <div v-for="employee in payrollData" :key="employee.employeeId" class="border rounded-lg p-4 mb-4 shadow-md">
       <h2 class="text-xl font-semibold">{{ employee.name }}</h2>
@@ -553,8 +488,8 @@ export default {
       });
     },
   },
-}; -->
-<!-- </script> -->
+}; 
+ </script>
 
 <style scoped>
 /* Optional: basic styling */
