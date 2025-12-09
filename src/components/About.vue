@@ -1,5 +1,61 @@
 <template>
-    <div class ="about-page">
+<!-- <template>
+  <div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Monthly Payroll</h1>
+    <div v-for="employee in payrollData" :key="employee.employeeId" class="border rounded-lg p-4 mb-4 shadow-md">
+      <h2 class="text-xl font-semibold">{{ employee.name }}</h2>
+      <p><strong>Department:</strong> {{ employee.department }}</p>
+      <p><strong>Position:</strong> {{ employee.position }}</p>
+      <p><strong>Days Worked:</strong> {{ employee.daysWorked }}</p>
+      <p><strong>Approved Leave Days:</strong> {{ employee.approvedLeaveDays }}</p>
+      <p class="mt-2 font-bold"><strong>Monthly Salary:</strong> ZAR {{ employee.salary.toLocaleString() }}</p>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Payroll",
+  data() {
+    return {
+      employees: [
+        // Paste your employeeInformation data here
+      ],
+      attendanceAndLeave: [
+        // Paste your attendanceAndLeave data here
+      ],
+    };
+  },
+  computed: {
+    payrollData() {
+      // Combine employee info with attendance/leave
+      return this.employees.map(emp => {
+        const attendanceRecord = this.attendanceAndLeave.find(a => a.employeeId === emp.employeeId);
+
+        const daysWorked = attendanceRecord.attendance.filter(a => a.status === "Present").length;
+
+        const approvedLeaveDays = attendanceRecord.leaveRequests.filter(l => l.status === "Approved").length;
+
+        return {
+          employeeId: emp.employeeId,
+          name: emp.name,
+          department: emp.department,
+          position: emp.position,
+          daysWorked,
+          approvedLeaveDays,
+          salary: emp.salary,
+        };
+      });
+    },
+  },
+};
+</script> -->
+
+<!-- <style scoped>
+/* Optional: basic styling */
+</style> -->
+
+     <div class ="about-page">
     <div class="hero-section"></div>
     <h1>About Staff Sync</h1>
     <p>Streamlining HR operations for the modern workplace</p>
@@ -41,9 +97,8 @@
     <p>This platform is designed for the HR managers, administrators and small to medium-sized organizations.</p>
     </div>
 
-
-</template>
-<script>
+ </template> 
+ <script>
 export default{
     name: "About"
 }
@@ -70,4 +125,4 @@ export default{
 .about ul {
     margin-left: 20px;
 }
-</style>
+</style> 

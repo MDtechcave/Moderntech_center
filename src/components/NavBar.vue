@@ -16,10 +16,9 @@
             <li><router-link class="dropdown-item" to="/employees">Employees manangement</router-link></li>
             <li><router-link class="dropdown-item" to="/payroll" >Payroll manangement</router-link></li>
             <li><router-link class="dropdown-item" to="/attendance">Attendance manangement</router-link></li>
-            <li><router-link class="dropdown-item" to="/payslip">Payslip manangement</router-link></li>
-
           </ul>
         </li>
+        
         <li class="nav-item">
             <router-link class="nav-link" to="/about">About</router-link>
         </li>
