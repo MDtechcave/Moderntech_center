@@ -51,6 +51,7 @@
                   Payroll Management
                 </router-link>
               </li>
+              <li><router-link class="dropdown-item" to="/workreviews">Reviews</router-link></li>
             </ul>
           </li>
 
