@@ -58,7 +58,7 @@ export default {
         <input v-model="password" type="password" placeholder="Password" />
         <span v-if="errors.password" class="error">{{ errors.password }}</span>
       </div>
-      <button type="submit">Login</button>
+      <button type="submit" @click="login">Login</button>
     </form>
   </div>
 </template>
@@ -78,7 +78,7 @@ export default {
 
       if (!this.username) this.errors.username = "Username is required"
       if (!this.password) this.errors.password = "Password is required"
-
+    
       if (Object.keys(this.errors).length === 0) {
         // Save a token or user info to indicate logged-in state
         localStorage.setItem('user', this.username)
