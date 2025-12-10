@@ -1,44 +1,109 @@
- <template>
-    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-    <div class="container-fluid">
-    <router-link class="navbar-brand" to="/">Staff Sync</router-link>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" >
-            Home
-          </a>
-          <ul class="dropdown-menu">
-            <li><router-link class="dropdown-item" to="/employees">Employees manangement</router-link></li>
-            <li><router-link class="dropdown-item" to="/payroll" >Payroll manangement</router-link></li>
-            <li><router-link class="dropdown-item" to="/attendance">Attendance manangement</router-link></li>
-            <li><router-link class="dropdown-item" to="/workreviews">Reviews</router-link></li>
-          </ul>
-        </li>
-        
-        <li class="nav-item">
-            <router-link class="nav-link" to="/about">About</router-link>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">LOGOUT</a>
-        </li> 
+   <template>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      
+      <!-- WEB APP NAME -->
+      <router-link class="navbar-brand fw-bold" to="/">
+        StaffSync
+      </router-link>
+
+      <!-- Mobile toggle -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Nav items -->
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+
+          <!-- Dropdown -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle"
+              role="button"
+              data-bs-toggle="dropdown"
+            >
+              HR Management
+            </a>
+
+            <ul class="dropdown-menu">
+              <li>
+                <router-link class="dropdown-item" to="/employees">
+                  Employee Management
+                </router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/attendance">
+                  Attendance Management
+                </router-link>
+              </li>
+              <li>
+                <router-link class="dropdown-item" to="/payroll">
+                  Payroll Management
+                </router-link>
+              </li>
+              <li><router-link class="dropdown-item" to="/workreviews">Reviews</router-link></li>
+            </ul>
+          </li>
+
+          <!-- About -->
+          <li class="nav-item">
+            <router-link class="nav-link" to="/about">
+              About
+            </router-link>
+          </li>
+
+          <!-- Logout -->
+          <li class="nav-item">
+            <a class="nav-link text-warning" href="#">
+              Logout
+            </a>
+          </li>
         </ul>
 
+        <!-- Search -->
         <form class="d-flex ms-auto" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-      
-    </div>
-  </div>
-</nav> 
-    </template>
-    <script></script>
-    <style>
+          <input
+            class="form-control me-2"
+            type="search"
+            placeholder="Search employee"
+          />
+          <button class="btn btn-outline-light" type="submit">
+            Search
+          </button>
+        </form>
 
-    </style>
- 
+      </div>
+    </div>
+  </nav>
+</template>
+
+<script>
+export default {
+  name: "NavBar"
+};
+</script>
+<style>
+  .navbar-brand {
+  letter-spacing: 1px;
+}
+
+.dropdown-menu {
+  font-size: 14px;
+}
+
+.nav-link {
+  cursor: pointer;
+}
+
+</style>
+
