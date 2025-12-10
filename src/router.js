@@ -33,7 +33,7 @@ import Payroll from './components/Payroll.vue';
 
 const routes = [
   { path: '/login', component: Login },
-  {path: '/workreviews', component: workreviews}
+  {path: '/workreviews', component: workreviews},
   { path: '/', component: HrHome },
   { path: '/about', component: About },
   { path: '/employees', component: employees },
