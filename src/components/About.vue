@@ -23,7 +23,7 @@
       <div class="feature-card">
         <i class="fa-solid fa-users fa-2x"></i>
         <h3>Employee Management</h3>
-        <p>Keep track of all employee details efficiently.</p>
+        <p>Keeps track of all employee details efficiently.</p>
       </div>
 
       <div class="feature-card">

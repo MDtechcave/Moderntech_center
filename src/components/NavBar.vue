@@ -1,5 +1,4 @@
-
-   <template>
+<template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       
@@ -75,7 +74,7 @@
           <input
             class="form-control me-2"
             type="search"
-            placeholder="Search employee"
+            placeholder="search"
           />
           <button class="btn btn-outline-light" type="submit">
             Search

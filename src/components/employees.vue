@@ -3,7 +3,7 @@
   <div class="employees-page">
   <div class="table-container">
 
-    <h1>Employees</h1>
+    <h1>Employee Info</h1>
 
     <table class="employee-table">
       <thead>

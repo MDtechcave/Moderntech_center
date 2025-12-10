@@ -4,7 +4,7 @@
 
       <h2>Welcome to StaffSync</h2>
       <p class="subtitle">
-        Manage employees, attendance, payroll and leave — all in one place.
+        Manage employees, attendance, payroll and leave <strong> all in one place</strong>!
       </p>
 
       <div class="icon-container">
