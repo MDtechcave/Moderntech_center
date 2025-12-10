@@ -1,4 +1,8 @@
 <template>
+  <!-- <div>
+    <h1>Welcome, {{ username }}</h1>
+    <button @click="logout">Logout</button>
+  </div> -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
       
@@ -63,10 +67,11 @@
 
           <!-- Logout -->
           <li class="nav-item">
-            <a class="nav-link text-warning" href="#">
-              Logout
-            </a>
-          </li>
+  <a class="nav-link text-warning" href="#" @click="logout">
+    Logout
+  </a>
+</li>
+
         </ul>
 
         <!-- Search -->
@@ -87,9 +92,27 @@
 </template>
 
 <script>
+// export default {
+//   methods: {
+//     logout() {
+//       localStorage.clear()
+//       this.$router.push('/login')
+//     }
+//   }
+// }
 export default {
-  name: "NavBar"
-};
+  data() {
+    return {
+      username: localStorage.getItem('user') || ''
+    }
+  },
+  methods: {
+    logout() {
+      localStorage.removeItem('user')
+      this.$router.push('/login')
+    }
+  }
+}
 </script>
 <style>
   .navbar-brand {
