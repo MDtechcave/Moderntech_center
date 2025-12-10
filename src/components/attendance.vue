@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="attendance-page">
     <h1>Employee Records</h1>
 
     <div class="grid-container">
@@ -421,8 +421,112 @@ export default {
 </script>
 
 <style>
+    /*  BACKGROUND */
+.attendance-page {
+  background: #f4f6f8;
+  min-height: 100vh;
+  padding: 30px;
+}
 
+/*  TITLE */
+.attendance-page h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+/* GRID LAYOUT */
 .grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 25px;
+}
+
+/* EMPLOYEE CARD */
+.employee-table {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+}
+
+/* EMPLOYEE NAME */
+.employee-table h2 {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* SECTION HEADERS */
+.employee-table h3 {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* TABLE */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+th {
+  text-align: left;
+  font-size: 13px;
+  color: #555;
+  padding-bottom: 6px;
+}
+
+td {
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+/* ROW COLORS */
+.attendance-row {
+  background-color: #f1f8ff;
+}
+
+.leave-row {
+  background-color: #fff7eb;
+}
+
+/* STATUS BADGES */
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 14px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+/* STATUS COLORS */
+.status-badge.present {
+  background: #2e7d32;
+}
+
+.status-badge.absent {
+  background: #c62828;
+}
+
+.status-badge.pending {
+  background: #f9a825;
+}
+
+.status-badge.denied {
+  background: #8e0000;
+}
+
+.status-badge.approved {
+  background: #1565c0;
+}
+
+
+/* .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 25px;
@@ -483,5 +587,5 @@ export default {
 
 .status-badge.approved {
   background: #1e88e5;
-}
+} */
 </style>
