@@ -1,22 +1,13 @@
-<script >
-import HrHome from './components/HrHome.vue';
+<script>
 import NavBar from './components/NavBar.vue';
+
 export default {
-  components: {
-    NavBar
-  }
+  components: { NavBar }
 };
 </script>
 
 <template>
-  <!-- <div> -->
-  <!-- <hr-home/> -->
-  <nav-bar/>
+  <nav-bar v-if="$route.path !== '/login'" />
   <router-view />
-  <!-- </div>  -->
 </template>
 
-<style scoped>
-
-
-</style>
