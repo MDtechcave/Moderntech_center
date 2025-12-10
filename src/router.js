@@ -47,12 +47,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const loggedIn = localStorage.getItem("auth");
+  const loggedIn = localStorage.getItem("loggedIn");
 
   if (to.meta.requiresAuth && !loggedIn) {
-    next('/login');
+    next('/');
   } else {
-    next();
+    next()
   }
 });
 
