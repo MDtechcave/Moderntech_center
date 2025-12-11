@@ -82,7 +82,7 @@
         </ul>
 
         <!-- Search -->
-        <form class="d-flex ms-auto" role="search employees">
+        <form class="d-flex ms-auto" role="search">
           <input
             class="form-control me-2"
             type="search"
