@@ -58,6 +58,7 @@ export default {
         <input v-model="password" type="password" placeholder="Password" />
         <span v-if="errors.password" class="error">{{ errors.password }}</span>
       </div>
+      <button type="submit" @click="login">Login</button>
     <div class="forgot-password">
       <a href="#" @click.prevent>Forgot password?</a>
     </div>
@@ -122,9 +123,9 @@ export default {
     login() {
       this.errors = {};
 
-      if (!this.username) this.errors.username = "Username is required";
-      if (!this.password) this.errors.password = "Password is required";
-
+      if (!this.username) this.errors.username = "Username is required"
+      if (!this.password) this.errors.password = "Password is required"
+    
       if (Object.keys(this.errors).length === 0) {
         localStorage.setItem("user", this.username);
         this.$router.push("/");
