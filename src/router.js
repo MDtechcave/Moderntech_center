@@ -26,19 +26,38 @@ import Login from './components/Login.vue';
 
 import HrHome from './components/HrHome.vue';
 import About from './components/About.vue';
-import employees from './components/employees.vue';
-import attendance from './components/attendance.vue';
+import employees from './components/Employees.vue';
+import attendance from './components/Attendance.vue';
 import workreviews from './components/workreviews.vue';
 import Payroll from './components/Payroll.vue';
+// import managementReview from './components/managementReview.vue';
 
 const routes = [
   { path: '/login', component: Login },
   {path: '/workreviews', component: workreviews},
-  { path: '/', component: HrHome },
-  { path: '/about', component: About },
-  { path: '/employees', component: employees },
-  { path: '/attendance', component: attendance },
-  { path: '/payroll', component: Payroll },
+  { path: '/',
+     component: HrHome ,
+    meta:{requiresAuth: true}
+  },
+  { path: '/about', component: About, 
+    meta: {requiresAuth: true}
+  },
+  { path: '/employees',
+     component: employees ,
+     meta: {requiresAuth: true}
+  },
+  { path: '/attendance',
+     component: attendance,
+     meta: {requiresAuth: true}
+    },
+  { path: '/payroll',
+     component: Payroll,
+     meta: {requiresAuth: true}
+     },
+    //  {path: '/managementreview',
+    //   component: ManagementReview,
+    //   meta: {requiresAuth: true}
+    //  },
 ];
 
 const router = createRouter({
@@ -47,12 +66,12 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const loggedIn = localStorage.getItem("loggedIn");
+  const isloggedIn = localStorage.getItem("user");
 
-  if (to.meta.requiresAuth && !loggedIn) {
-    next('/');
+  if (to.meta.requiresAuth && !isloggedIn) {
+    next('/login'); //sends you to login
   } else {
-    next()
+    next(); //allows access
   }
 });
 

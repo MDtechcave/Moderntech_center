@@ -58,6 +58,7 @@
             </ul>
           </li>
 
+
           <!-- About -->
           <li class="nav-item">
             <router-link class="nav-link" to="/about">
@@ -66,16 +67,22 @@
           </li>
 
           <!-- Logout -->
-          <li class="nav-item">
-  <a class="nav-link text-warning" href="#" @click="logout">
-    Logout
-  </a>
-</li>
+        <li class="nav-item">
+            <a class="nav-link text-warning" href="#" @click="logout">
+              Logout
+           </a>
+        </li>
 
+          <!-- <li class="nav-item">
+            <router-link class="nav-link" to="/managementReview">
+              Management Review
+            </router-link>
+          </li>
+ -->
         </ul>
 
         <!-- Search -->
-        <form class="d-flex ms-auto" role="search">
+        <form class="d-flex ms-auto" role="search employees">
           <input
             class="form-control me-2"
             type="search"
