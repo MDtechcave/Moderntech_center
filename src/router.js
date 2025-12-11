@@ -30,11 +30,13 @@ import employees from './components/Employees.vue';
 import attendance from './components/Attendance.vue';
 import workreviews from './components/workreviews.vue';
 import Payroll from './components/Payroll.vue';
-// import managementReview from './components/managementReview.vue';
 
 const routes = [
   { path: '/login', component: Login },
-  {path: '/workreviews', component: workreviews},
+  {path: '/workreviews',
+     component: workreviews,
+     meta: {requiresAuth: true}
+    },
   { path: '/',
      component: HrHome ,
     meta:{requiresAuth: true}
@@ -54,10 +56,6 @@ const routes = [
      component: Payroll,
      meta: {requiresAuth: true}
      },
-    //  {path: '/managementreview',
-    //   component: ManagementReview,
-    //   meta: {requiresAuth: true}
-    //  },
 ];
 
 const router = createRouter({
