@@ -26,8 +26,8 @@ import Login from './components/Login.vue';
 
 import HrHome from './components/HrHome.vue';
 import About from './components/About.vue';
-import employees from './components/Employees.vue';
-import attendance from './components/Attendance.vue';
+import employees from './components/employees.vue';
+import attendance from './components/attendance.vue';
 import workreviews from './components/workreviews.vue';
 import Payroll from './components/Payroll.vue';
 // import managementReview from './components/managementReview.vue';

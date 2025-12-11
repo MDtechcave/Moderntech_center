@@ -31,6 +31,7 @@
           </tr>
         </table>
 
+
         <h3>Leave Requests</h3>
         <table border="0" cellpadding="5" cellspacing="0">
           <tr>
