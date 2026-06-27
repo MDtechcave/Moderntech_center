@@ -10,7 +10,6 @@
       >
         <h2>{{ emp.name }}</h2>
 
-        
         <h3>Attendance</h3>
         <table border="0" cellpadding="5" cellspacing="0">
           <tr>
@@ -31,13 +30,13 @@
           </tr>
         </table>
 
-
         <h3>Leave Requests</h3>
         <table border="0" cellpadding="5" cellspacing="0">
           <tr>
             <th>Date</th>
             <th>Reason</th>
             <th>Status</th>
+            <th v-if="role === 'admin'">Action</th>
           </tr>
           <tr
             v-for="(leave, idx) in emp.leaveRequests"
@@ -51,6 +50,11 @@
                 {{ leave.status }}
               </span>
             </td>
+            <td v-if="role === 'admin' && leave.status === 'Pending'">
+              <button class="btn-approve" @click="updateLeave(leave.id, 'Approved')">Approve</button>
+              <button class="btn-deny" @click="updateLeave(leave.id, 'Denied')">Deny</button>
+            </td>
+            <td v-else-if="role === 'admin'"></td>
           </tr>
         </table>
       </div>
@@ -58,65 +62,72 @@
   </div>
 </template>
 
-
 <script>
 import axios from 'axios'
 
 export default {
   data() {
     return {
-      attendanceAndLeave: []
+      attendanceAndLeave: [],
+      role: localStorage.getItem('role') || 'employee'
     }
   },
   async mounted() {
-    try {
-      const [attendanceRes, leaveRes, employeesRes] = await Promise.all([
-        axios.get('http://127.0.0.1:8000/attendance/'),
-        axios.get('http://127.0.0.1:8000/attendance/leave'),
-        axios.get('http://127.0.0.1:8000/employees/')
-      ])
-
-      this.attendanceAndLeave = employeesRes.data.map(emp => ({
-        employeeId: emp.id,
-        name: emp.name,
-        attendance: attendanceRes.data.filter(a => a.employee_id === emp.id),
-        leaveRequests: leaveRes.data.filter(l => l.employee_id === emp.id)
-      }))
-    } catch (error) {
-      console.error('Failed to fetch attendance:', error)
-    }
+    await this.fetchData()
   },
   methods: {
     statusClass(status) {
       return status.toLowerCase()
+    },
+    async fetchData() {
+      try {
+        const [attendanceRes, leaveRes, employeesRes] = await Promise.all([
+          axios.get('http://127.0.0.1:8000/attendance/'),
+          axios.get('http://127.0.0.1:8000/attendance/leave'),
+          axios.get('http://127.0.0.1:8000/employees/')
+        ])
+
+        this.attendanceAndLeave = employeesRes.data.map(emp => ({
+          employeeId: emp.id,
+          name: emp.name,
+          attendance: attendanceRes.data.filter(a => a.employee_id === emp.id),
+          leaveRequests: leaveRes.data.filter(l => l.employee_id === emp.id)
+        }))
+      } catch (error) {
+        console.error('Failed to fetch attendance:', error)
+      }
+    },
+    async updateLeave(leaveId, status) {
+      try {
+        await axios.patch(`http://127.0.0.1:8000/attendance/leave/${leaveId}`, { status })
+        await this.fetchData()
+      } catch (error) {
+        console.error('Failed to update leave:', error)
+      }
     }
   }
 }
 </script>
 
 <style>
-    /*  BACKGROUND */
 .attendance-page {
   background: #f4f6f8;
   min-height: 100vh;
   padding: 30px;
 }
 
-/*  TITLE */
 .attendance-page h1 {
   text-align: center;
   margin-bottom: 30px;
   font-weight: 700;
 }
 
-/* GRID LAYOUT */
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 25px;
 }
 
-/* EMPLOYEE CARD */
 .employee-table {
   background: #ffffff;
   padding: 20px;
@@ -125,7 +136,6 @@ export default {
   box-shadow: 0 6px 15px rgba(0,0,0,0.06);
 }
 
-/* EMPLOYEE NAME */
 .employee-table h2 {
   text-align: center;
   margin-bottom: 10px;
@@ -133,14 +143,12 @@ export default {
   font-weight: 600;
 }
 
-/* SECTION HEADERS */
 .employee-table h3 {
   margin-top: 15px;
   font-size: 16px;
   color: #333;
 }
 
-/* TABLE */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -159,7 +167,6 @@ td {
   font-size: 14px;
 }
 
-/* ROW COLORS */
 .attendance-row {
   background-color: #f1f8ff;
 }
@@ -168,7 +175,6 @@ td {
   background-color: #fff7eb;
 }
 
-/* STATUS BADGES */
 .status-badge {
   padding: 5px 12px;
   border-radius: 14px;
@@ -178,88 +184,30 @@ td {
   display: inline-block;
 }
 
-/* STATUS COLORS */
-.status-badge.present {
-  background: #2e7d32;
-}
+.status-badge.present { background: #2e7d32; }
+.status-badge.absent { background: #c62828; }
+.status-badge.pending { background: #f9a825; }
+.status-badge.denied { background: #8e0000; }
+.status-badge.approved { background: #1565c0; }
 
-.status-badge.absent {
-  background: #c62828;
-}
-
-.status-badge.pending {
-  background: #f9a825;
-}
-
-.status-badge.denied {
-  background: #8e0000;
-}
-
-.status-badge.approved {
+.btn-approve {
   background: #1565c0;
-}
-
-
-/* .grid-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 25px;
-  padding: 20px;
-}
-
-.employee-table {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.05);
-}
-
-.employee-table h2 {
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.employee-table h3 {
-  margin-top: 15px;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.attendance-row {
-  background: #e9f5ff;
-}
-
-.leave-row {
-  background: #fff2e0;
-}
-
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
   color: white;
-  font-weight: 600;
-  text-transform: capitalize;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 5px;
   font-size: 12px;
 }
 
-.status-badge.present {
-  background: #28a745;
+.btn-deny {
+  background: #8e0000;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
 }
-
-.status-badge.absent {
-  background: #dc3545;
-}
-
-.status-badge.pending {
-  background: #ff9800;
-}
-
-.status-badge.denied {
-  background: #b71c1c;
-}
-
-.status-badge.approved {
-  background: #1e88e5;
-} */
 </style>

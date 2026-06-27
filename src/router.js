@@ -1,40 +1,20 @@
-// import { createRouter, createWebHistory } from 'vue-router';
-// import HrHome from './components/HrHome.vue';
-// import About from './components/About.vue';
-
-// import Employees from './components/Employees.vue';
-// import Attendance from './components/Attendance.vue';
-// import Payroll from './components/Payroll.vue';
-
-// const routes = [
-//   { path:'/',  component: HrHome },
-//   {path: '/about', component: about},
-//   {path: '/employees', component: employees},
-//   {path: '/attendance', component: attendance},
-//   {path: '/payroll', component: payroll},
-
-// ];
-
-// const router = createRouter({
-//   history: createWebHistory(),
-//   routes,
-// });
-
-// export default router;
 import { createRouter, createWebHistory } from 'vue-router';
+import { supabase } from './supabase'
 import Login from './components/Login.vue';
-
 import HrHome from './components/HrHome.vue';
 import About from './components/About.vue';
 import employees from './components/employees.vue';
 import attendance from './components/attendance.vue';
 import workreviews from './components/workreviews.vue';
 import Payroll from './components/Payroll.vue';
-// import managementReview from './components/managementReview.vue';
 
 const routes = [
-  { path: '/login', component: Login },
-  {path: '/workreviews', component: workreviews,
+  { path: '/login',
+     component: Login 
+  },
+
+  {path: '/workreviews',
+     component: workreviews,
     meta: {requiresAuth: true}
    },
   { path: '/',
@@ -56,10 +36,6 @@ const routes = [
      component: Payroll,
      meta: {requiresAuth: true}
      },
-    //  {path: '/managementreview',
-    //   component: ManagementReview,
-    //   meta: {requiresAuth: true}
-    //  },
 ];
 
 const router = createRouter({
@@ -67,15 +43,22 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isloggedIn = localStorage.getItem("user");
+router.beforeEach(async (to, from, next) => {
+  const { data } = await supabase.auth.getSession()
+  const isLoggedIn = !!data.session
+  const role = localStorage.getItem('role')
 
-  if (to.meta.requiresAuth && !isloggedIn) {
-    next('/login'); //sends you to login
+
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    next('/login')
+  } else if (to.path === '/login' && isLoggedIn) {
+    next('/')
+  } else if (to.meta.requiresAdmin && role !== 'admin') {
+    next('/')
   } else {
-    next(); //allows access
+    next()
   }
-});
+})
 
 export default router;
 

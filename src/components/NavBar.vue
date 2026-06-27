@@ -1,17 +1,10 @@
 <template>
-  <!-- <div>
-    <h1>Welcome, {{ username }}</h1>
-    <button @click="logout">Logout</button>
-  </div> -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
-      
-      <!-- WEB APP NAME -->
       <router-link class="navbar-brand fw-bold" to="/">
         StaffSync
       </router-link>
 
-      <!-- Mobile toggle -->
       <button
         class="navbar-toggler"
         type="button"
@@ -24,104 +17,76 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Nav items -->
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+       <ul class="navbar-nav">
+  <li class="nav-item dropdown" v-if="role === 'admin'">
+    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
+      HR Management
+    </a>
+    <ul class="dropdown-menu">
+      <li>
+        <router-link class="dropdown-item" to="/employees">
+          Employee Management
+        </router-link>
+      </li>
+      <li>
+        <router-link class="dropdown-item" to="/attendance">
+          Attendance Management
+        </router-link>
+      </li>
+      <li>
+        <router-link class="dropdown-item" to="/payroll">
+          Payroll Management
+        </router-link>
+      </li>
+      <li>
+        <router-link class="dropdown-item" to="/workreviews">
+          Reviews
+        </router-link>
+      </li>
+    </ul>
+  </li>
 
-          <!-- Dropdown -->
-          <li class="nav-item dropdown">
-            <a
-              class="nav-link dropdown-toggle"
-              role="button"
-              data-bs-toggle="dropdown"
-            >
-              HR Management
-            </a>
+  <li class="nav-item" v-if="role === 'admin'">
+    <router-link class="nav-link" to="/about">About</router-link>
+  </li>
 
-            <ul class="dropdown-menu">
-              <li>
-                <router-link class="dropdown-item" to="/employees">
-                  Employee Management
-                </router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/attendance">
-                  Attendance Management
-                </router-link>
-              </li>
-              <li>
-                <router-link class="dropdown-item" to="/payroll">
-                  Payroll Management
-                </router-link>
-              </li>
-              <li><router-link class="dropdown-item" to="/workreviews">Reviews</router-link></li>
-            </ul>
-          </li>
+  <li class="nav-item" v-if="role === 'employee'">
+    <router-link class="nav-link" to="/">Home</router-link>
+  </li>
 
+  <li class="nav-item">
+    <a class="nav-link text-warning" href="#" @click="logout">Logout</a>
+  </li>
+</ul>
 
-          <!-- About -->
-          <li class="nav-item">
-            <router-link class="nav-link" to="/about">
-              About
-            </router-link>
-          </li>
-
-          <!-- Logout -->
-        <li class="nav-item">
-            <a class="nav-link text-warning" href="#" @click="logout">
-              Logout
-           </a>
-        </li>
-
-          <!-- <li class="nav-item">
-            <router-link class="nav-link" to="/managementReview">
-              Management Review
-            </router-link>
-          </li>
- -->
-        </ul>
-
-        <!-- Search -->
-        <form class="d-flex ms-auto" role="search">
-          <input
-            class="form-control me-2"
-            type="search"
-            placeholder="search"
-          />
-          <button class="btn btn-outline-light" type="submit">
-            Search
-          </button>
+        <form class="d-flex ms-auto" role="search" v-if="role === 'admin'">
+          <input class="form-control me-2" type="search" placeholder="Search" />
+          <button class="btn btn-outline-light" type="submit">Search</button>
         </form>
-
       </div>
     </div>
   </nav>
 </template>
-
 <script>
-// export default {
-//   methods: {
-//     logout() {
-//       localStorage.clear()
-//       this.$router.push('/login')
-//     }
-//   }
-// }
+import { supabase } from '../supabase'
+
 export default {
   data() {
     return {
-      username: localStorage.getItem('user') || ''
+      role: localStorage.getItem('role') || 'employee'
     }
   },
   methods: {
-    logout() {
+    async logout() {
+      await supabase.auth.signOut()
       localStorage.removeItem('user')
+      localStorage.removeItem('role')
       this.$router.push('/login')
     }
   }
 }
-</script>
-<style>
+</script><style>
   .navbar-brand {
   letter-spacing: 1px;
 }

@@ -7,11 +7,11 @@
       <form @submit.prevent="login">
         <div class="field">
           <input
-            v-model.trim="username"
-            placeholder="Username"
+            v-model.trim="email"
+            placeholder="Email"
           />
-          <span v-if="errors.username" class="error">
-            {{ errors.username }}
+          <span v-if="errors.email" class="error">
+            {{ errors.email }}
           </span>
         </div>
 
@@ -38,32 +38,51 @@
   </div>
 </template>
 
-
 <script>
+import { supabase } from '../supabase'
+
 export default {
   data() {
     return {
-      username: "",
+      email: "",
       password: "",
       errors: {}
     };
   },
   methods: {
-    login() {
+    async login() {
       this.errors = {};
 
-      if (!this.username) this.errors.username = "Username is required"
+      if (!this.email) this.errors.email = "Email is required"
       if (!this.password) this.errors.password = "Password is required"
-    
+
       if (Object.keys(this.errors).length === 0) {
-        localStorage.setItem("user", this.username);
-        this.$router.push("/");
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: this.email,
+          password: this.password
+        })
+
+        if (error) {
+          this.errors.email = "Invalid email or password"
+          return
+        }
+
+        const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', data.user.id)
+      .single()
+
+        localStorage.setItem('user', data.user.email)
+         localStorage.setItem('role', profile.role)
+         localStorage.setItem('employee_id', profile.employee_id)
+        this.$router.push('/')
       }
     }
   }
-};
-
+}
 </script>
+
 <style>
 /* Page background */
 .login-page {
