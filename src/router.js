@@ -7,6 +7,9 @@ import employees from './components/employees.vue';
 import attendance from './components/attendance.vue';
 import workreviews from './components/workreviews.vue';
 import Payroll from './components/Payroll.vue';
+import MyLeave from './components/MyLeave.vue';
+import MyAttendance from './components/MyAttendance.vue';
+import MyPayslip from './components/MyPayslip.vue'
 
 const routes = [
   { path: '/login',
@@ -36,6 +39,18 @@ const routes = [
      component: Payroll,
      meta: {requiresAuth: true}
      },
+     { path: '/myleave',
+      component: MyLeave,
+       meta: { requiresAuth: true } 
+    },
+    { path: '/myattendance',
+       component: MyAttendance,
+        meta: { requiresAuth: true }
+       },
+  { path: '/mypayslip',
+   component: MyPayslip,
+    meta: { requiresAuth: true } 
+  },
 ];
 
 const router = createRouter({
