@@ -4,10 +4,10 @@
     <h1 class="mb-4">Payroll Payslips</h1>
 
     <div
-      v-for="employee in payslips"
-      :key="employee.employeeId"
-      class="card mb-4 payslip-card"
-    >
+  v-for="employee in payslips"
+  :key="employee.employee_id"
+  class="card mb-4 payslip-card"
+>
       <div class="card-body">
         <h2 class="text-center mb-3">Payslip</h2>
         <h4>{{ employee.name }} - {{ employee.position }}</h4>
@@ -15,17 +15,17 @@
         <p><strong>Contact:</strong> {{ employee.contact }}</p>
 
         <hr>
-        <p><strong>Total Working Days:</strong> {{ employee.totalDays }}</p>
-        <p><strong>Days Present:</strong> {{ employee.presentDays }}</p>
-        <p><strong>Approved Leave:</strong> {{ employee.approvedLeave }}</p>
-        <p><strong>Days Absent:</strong> {{ employee.absentDays }}</p>
+        <p><strong>Total Working Days:</strong> {{ employee.total_days }}</p>
+        <p><strong>Days Present:</strong> {{ employee.present_days }}</p>
+        <p><strong>Approved Leave:</strong> {{ employee.approved_leave }}</p>
+        <p><strong>Days Absent:</strong> {{ employee.absent_days }}</p>
 
         <hr>
         <p><strong>Base Salary:</strong> R{{ employee.salary.toLocaleString() }}</p>
         <p><strong>Deduction for Absences:</strong> R{{ employee.deduction.toLocaleString() }}</p>
-        <h5><strong>Final Salary:</strong> R{{ employee.finalSalary.toLocaleString() }}</h5>
+        <h5><strong>Final Salary:</strong> R{{ employee.final_salary.toLocaleString() }}</h5>
 
-         Download button 
+         
         <button class="btn btn-success mt-3" @click="downloadPayslip(employee)">
           Download Payslip
         </button>
@@ -34,73 +34,25 @@
   </div>
 </template>
 
- <script>
+<script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
-      employees: [
-        {
-          employeeId: 1,
-          name: "Sibongile Nkosi",
-          position: "Software Engineer",
-          department: "Development",
-          salary: 70000,
-          contact: "sibongile.nkosi@moderntech.com"
-        },
-        {
-          employeeId: 2,
-          name: "Lungile Moyo",
-          position: "HR Manager",
-          department: "HR",
-          salary: 80000,
-          contact: "lungile.moyo@moderntech.com"
-        }
-      ],
-
-      attendance: [
-        {
-          employeeId: 1,
-          presentDays: 20,
-          approvedLeave: 2,
-          absentDays: 2
-        },
-        {
-          employeeId: 2,
-          presentDays: 22,
-          approvedLeave: 1,
-          absentDays: 1
-        }
-      ]
-    };
-  },
-
-  computed: {
-    payslips() {
-      return this.employees.map(emp => {
-        const record = this.attendance.find(
-          att => att.employeeId === emp.employeeId
-        );
-
-        const totalDays = 22;
-        const dailyRate = emp.salary / totalDays;
-        const deduction = dailyRate * record.absentDays;
-
-        return {
-          ...emp,
-          totalDays,
-          presentDays: record.presentDays,
-          approvedLeave: record.approvedLeave,
-          absentDays: record.absentDays,
-          deduction: Math.round(deduction),
-          finalSalary: Math.round(emp.salary - deduction)
-        };
-      });
+      payslips: []
     }
   },
-
+  async mounted() {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/payroll/')
+      this.payslips = response.data
+    } catch (error) {
+      console.error('Failed to fetch payroll:', error)
+    }
+  },
   methods: {
     downloadPayslip(employee) {
-      // Build payslip content as plain text
       const content = `
 PAYSLIP
 ----------------------------------------
@@ -109,33 +61,28 @@ Position: ${employee.position}
 Department: ${employee.department}
 Contact: ${employee.contact}
 
-Total Working Days: ${employee.totalDays}
-Days Present: ${employee.presentDays}
-Approved Leave: ${employee.approvedLeave}
-Days Absent: ${employee.absentDays}
+Total Working Days: ${employee.total_days}
+Days Present: ${employee.present_days}
+Approved Leave: ${employee.approved_leave}
+Days Absent: ${employee.absent_days}
 
 Base Salary: R${employee.salary.toLocaleString()}
 Deduction for Absences: R${employee.deduction.toLocaleString()}
-Final Salary: R${employee.finalSalary.toLocaleString()}
+Final Salary: R${employee.final_salary.toLocaleString()}
 
 Generated on: ${new Date().toLocaleDateString()}
 ----------------------------------------
-`;
-
-      // Create a downloadable blob
-      const blob = new Blob([content], { type: "text/plain" });
-      const url = URL.createObjectURL(blob);
-
-      // Create a temporary link to download
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `Payslip-${employee.name}.txt`;
-      link.click();
-
-      URL.revokeObjectURL(url);
+`
+      const blob = new Blob([content], { type: 'text/plain' })
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = `Payslip-${employee.name}.txt`
+      link.click()
+      URL.revokeObjectURL(url)
     }
   }
-};
+}
 </script>
 
 <style>

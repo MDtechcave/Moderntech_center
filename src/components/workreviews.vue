@@ -3,73 +3,63 @@
     <h2>Employee Performance Review</h2>
     <p class="subtext">Record and track employee performance feedback</p>
     <p><strong style="color: red;">ONLY MANAGEMENT MUST REVIEW!</strong></p>
+  </div>
 
+     
+<label>Employee ID</label>
+<input v-model="form.employee_id" placeholder="e.g. 1" type="number" />
 
-     Inputs
-     <label>Employee Name</label>
-    <input v-model="form.name" placeholder="Jane Doe" />
+<label>Rating (1–5)</label>
+<select v-model="form.rating">
+  <option disabled value="">Select rating</option>
+  <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
+</select>
 
-    <label>Position</label>
-    <input v-model="form.position" placeholder="Software Developer" />
+<label>Comments</label>
+<textarea
+  v-model="form.comments"
+  placeholder="Write performance comments..."
+></textarea>
 
-    <label>Rating (1–5)</label>
-    <select v-model="form.rating">
-      <option disabled value="">Select rating</option>
-      <option v-for="n in 5" :key="n" :value="n">{{ n }}</option>
-    </select>
+<p v-if="successMessage" style="color: green;">{{ successMessage }}</p>
 
-    <label>Comments</label>
-    <textarea
-      v-model="form.comments"
-      placeholder="Write performance comments..."
-    ></textarea>
-
-    <button @click="submitReview">Submit Review</button>
-
-      <!-- Reviews 
-     <h3 v-if="reviews.length" class="reviews-title">Submitted Reviews</h3>
-    <p v-else class="empty-text">No reviews submitted yet.</p>
-
-     <div
-      v-for="(rev, index) in reviews"
-      :key="index"
-      class="review-item"
-    >
-      <div class="review-header">
-        <strong>{{ rev.name }}</strong>
-        <span class="rating">{{ rev.rating }}/5</span>
-      </div>
-
-      <small>{{ rev.position }}</small>
-      <p>{{ rev.comments }}</p> -->
-    </div> 
-  <!-- </div>  -->
+<button @click="submitReview">Submit Review</button>     
 </template>
 
 <script setup>
 import { reactive, ref } from "vue";
+import axios from "axios";
 
 const form = reactive({
-  name: "",
-  position: "",
-  rating: "", 
- comments: ""
+  employee_id: "",
+  rating: "",
+  comments: ""
 });
 
 const reviews = ref([]);
+const successMessage = ref("");
 
-function submitReview() {
-  if (!form.name || !form.position || !form.rating || !form.comments) {
+async function submitReview() {
+  if (!form.employee_id || !form.rating || !form.comments) {
     alert("Please fill out all fields");
     return;
   }
 
-  // reviews.value.push({ ...form });
+  try {
+    await axios.post("http://127.0.0.1:8000/reviews/", {
+      employee_id: parseInt(form.employee_id),
+      rating: parseInt(form.rating),
+      comments: form.comments
+    });
 
-  // form.name = "";
-  // form.position = "";
-  // form.rating = "";
-  // form.comments = "";
+    successMessage.value = "Review submitted successfully!";
+    form.employee_id = "";
+    form.rating = "";
+    form.comments = "";
+  } catch (error) {
+    console.error("Failed to submit review:", error);
+    alert("Failed to submit review");
+  }
 }
 </script>
 

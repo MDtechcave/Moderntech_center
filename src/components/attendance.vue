@@ -10,7 +10,7 @@
       >
         <h2>{{ emp.name }}</h2>
 
-        <!-- tablemountain, intab'etafile -->
+        
         <h3>Attendance</h3>
         <table border="0" cellpadding="5" cellspacing="0">
           <tr>
@@ -58,367 +58,40 @@
   </div>
 </template>
 
+
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
-      attendanceAndLeave: [
-        {
-            "employeeId": 1,
-            "name": "Sibongile Nkosi",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2025-07-22",
-                    "reason": "Sick Leave",
-                    "status": "Approved"
-                },
-                {
-                    "date": "2024-12-01",
-                    "reason": "Personal",
-                    "status": "Pending"
-                }
-            ]
-        },
-        {
-            "employeeId": 2,
-            "name": "Lungile Moyo",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2025-07-15",
-                    "reason": "Family Responsibility",
-                    "status": "Denied"
-                },
-                {
-                    "date": "2024-12-02",
-                    "reason": "Vacation",
-                    "status": "Approved"
-                }
-            ]
-        },
-        {
-            "employeeId": 3,
-            "name": "Thabo Molefe",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2025-07-10",
-                    "reason": "Medical Appointment",
-                    "status": "Approved"
-                },
-                {
-                    "date": "2024-12-05",
-                    "reason": "Personal",
-                    "status": "Pending"
-                }
-            ]
-        },
-        {
-            "employeeId": 4,
-            "name": "Keshav Naidoo",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2025-07-20",
-                    "reason": "Bereavement",
-                    "status": "Approved"
-                }
-            ]
-        },
-        {
-            "employeeId": 5,
-            "name": "Zanele Khumalo",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2024-12-01",
-                    "reason": "Childcare",
-                    "status": "Pending"
-                }
-            ]
-        },
-        {
-            "employeeId": 6,
-            "name": "Sipho Zulu",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2025-07-18",
-                    "reason": "Sick Leave",
-                    "status": "Approved"
-                }
-            ]
-        },
-        {
-            "employeeId": 7,
-            "name": "Naledi Moeketsi",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2025-07-22",
-                    "reason": "Vacation",
-                    "status": "Pending"
-                }
-            ]
-        },
-        {
-            "employeeId": 8,
-            "name": "Farai Gumbo",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2024-12-02",
-                    "reason": "Medical Appointment",
-                    "status": "Approved"
-                }
-            ]
-        },
-        {
-            "employeeId": 9,
-            "name": "Karabo Dlamini",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2025-07-19",
-                    "reason": "Childcare",
-                    "status": "Denied"
-                }
-            ]
-        },
-        {
-            "employeeId": 10,
-            "name": "Fatima Patel",
-            "attendance": [
-                {
-                    "date": "2025-07-25",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-26",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-27",
-                    "status": "Absent"
-                },
-                {
-                    "date": "2025-07-28",
-                    "status": "Present"
-                },
-                {
-                    "date": "2025-07-29",
-                    "status": "Present"
-                }
-            ],
-            "leaveRequests": [
-                {
-                    "date": "2024-12-03",
-                    "reason": "Vacation",
-                    "status": "Pending"
-                }
-            ]
-        }
-    
-      ]
-    };
+      attendanceAndLeave: []
+    }
   },
+  async mounted() {
+    try {
+      const [attendanceRes, leaveRes, employeesRes] = await Promise.all([
+        axios.get('http://127.0.0.1:8000/attendance/'),
+        axios.get('http://127.0.0.1:8000/attendance/leave'),
+        axios.get('http://127.0.0.1:8000/employees/')
+      ])
 
+      this.attendanceAndLeave = employeesRes.data.map(emp => ({
+        employeeId: emp.id,
+        name: emp.name,
+        attendance: attendanceRes.data.filter(a => a.employee_id === emp.id),
+        leaveRequests: leaveRes.data.filter(l => l.employee_id === emp.id)
+      }))
+    } catch (error) {
+      console.error('Failed to fetch attendance:', error)
+    }
+  },
   methods: {
     statusClass(status) {
-      return status.toLowerCase();
+      return status.toLowerCase()
     }
   }
-};
+}
 </script>
 
 <style>
