@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { supabase } from './supabase'
+import AddEmployee from './components/AddEmployee.vue'
 import Login from './components/Login.vue';
 import HrHome from './components/HrHome.vue';
 import About from './components/About.vue';
@@ -12,6 +13,10 @@ import MyAttendance from './components/MyAttendance.vue';
 import MyPayslip from './components/MyPayslip.vue'
 
 const routes = [
+  { path: '/employees/add',
+     component: AddEmployee,
+    meta: { requiresAuth: true, requiresAdmin: true }
+   },
   { path: '/login',
      component: Login 
   },

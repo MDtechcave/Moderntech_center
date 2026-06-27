@@ -1,35 +1,37 @@
 <template>
-
   <div class="employees-page">
-  <div class="table-container">
+    <div class="table-container">
+      <div class="table-header">
+        <h1>Employee Info</h1>
+        <router-link to="/employees/add" class="add-btn">
+          <i class="ti ti-user-plus" aria-hidden="true"></i>
+          Add employee
+        </router-link>
+      </div>
 
-    <h1>Employee Info</h1>
-
-    <table class="employee-table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Position</th>
-          <th>Department</th>
-          <th>Salary</th>
-          <th>Employment History</th>
-          <th>Contact</th>
-        </tr>
-      </thead>
-
-      <transition-group tag="tbody" name="fade">
-        <tr v-for="emp in employees" :key="emp.employeeId">
-          <td>{{ emp.name }}</td>
-          <td>{{ emp.position }}</td>
-          <td>{{ emp.department }}</td>
-          <td>{{ emp.salary }}</td>
-          <td>{{ emp.employmentHistory }}</td>
-          <td>{{ emp.contact }}</td>
-
-        </tr>
-      </transition-group>
-    </table>
-  </div>
+      <table class="employee-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Department</th>
+            <th>Salary</th>
+            <th>Employment History</th>
+            <th>Contact</th>
+          </tr>
+        </thead>
+        <transition-group tag="tbody" name="fade">
+          <tr v-for="emp in employees" :key="emp.id">
+            <td>{{ emp.name }}</td>
+            <td>{{ emp.position }}</td>
+            <td>{{ emp.department }}</td>
+            <td>R{{ emp.salary.toLocaleString() }}</td>
+            <td>{{ emp.employment_history }}</td>
+            <td>{{ emp.contact }}</td>
+          </tr>
+        </transition-group>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -44,7 +46,7 @@ export default {
   },
   async mounted() {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/employees')
+      const response = await axios.get('http://127.0.0.1:8000/employees/')
       this.employees = response.data
     } catch (error) {
       console.error('Failed to fetch employees:', error)
@@ -54,14 +56,12 @@ export default {
 </script>
 
 <style>
-  /* PAGE BACKGROUND */
 .employees-page {
   min-height: 100vh;
   background: #f4f6f8;
   padding: 30px;
 }
 
-/* CONTAINER */
 .table-container {
   max-width: 1200px;
   margin: auto;
@@ -71,63 +71,68 @@ export default {
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
 }
 
-/* TITLE */
-.table-container h1 {
-  text-align: center;
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
-  font-weight: 700;
 }
 
-/* TABLE */
+.table-container h1 {
+  font-size: 22px;
+  font-weight: 500;
+  color: #2c2c2a;
+  margin: 0;
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  background: #185fa5;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.add-btn:hover { background: #0c447c; color: white; }
+
 .employee-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
 }
 
-/* TABLE HEADERS */
 .employee-table th {
-  background: #1e3a8a; /* HR blue */
+  background: #185fa5;
   color: white;
   padding: 12px;
   text-align: left;
-  font-size: 13px;
+  font-size: 12px;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-/* TABLE BODY */
 .employee-table td {
   padding: 12px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 0.5px solid #e8e8f0;
+  color: #2c2c2a;
 }
 
-/* ROW HOVER */
-.employee-table tbody tr:hover {
-  background: #f1f5f9;
-}
+.employee-table tbody tr:hover { background: #f4f6f8; }
 
-/* EMAIL STYLE */
 .employee-table td:last-child {
-  color: #2563eb;
+  color: #185fa5;
   font-weight: 500;
 }
 
-/* TRANSITION */
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-  transform: translateY(8px);
-}
+.fade-enter-active, .fade-leave-active { transition: all 0.3s ease; }
+.fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(8px); }
 
-/* RESPONSIVE */
 @media (max-width: 768px) {
-  .employee-table {
-    font-size: 12px;
-  }
+  .employee-table { font-size: 12px; }
 }
-
 </style>

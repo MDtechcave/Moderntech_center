@@ -2,7 +2,9 @@
   <div class="attendance-page">
     <h1>Employee Records</h1>
 
-    <div class="grid-container">
+    <LoadingSpinner v-if="loading" message="Fetching attendance records..." />
+
+    <div class="grid-container" v-else>
       <div
         class="employee-table"
         v-for="emp in attendanceAndLeave"
@@ -64,12 +66,15 @@
 
 <script>
 import axios from 'axios'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 export default {
+  components: { LoadingSpinner },
   data() {
     return {
       attendanceAndLeave: [],
-      role: localStorage.getItem('role') || 'employee'
+      role: localStorage.getItem('role') || 'employee',
+      loading: true
     }
   },
   async mounted() {
@@ -80,6 +85,7 @@ export default {
       return status.toLowerCase()
     },
     async fetchData() {
+      this.loading = true
       try {
         const [attendanceRes, leaveRes, employeesRes] = await Promise.all([
           axios.get('http://127.0.0.1:8000/attendance/'),
@@ -95,6 +101,8 @@ export default {
         }))
       } catch (error) {
         console.error('Failed to fetch attendance:', error)
+      } finally {
+        this.loading = false
       }
     },
     async updateLeave(leaveId, status) {
@@ -119,7 +127,9 @@ export default {
 .attendance-page h1 {
   text-align: center;
   margin-bottom: 30px;
-  font-weight: 700;
+  font-weight: 500;
+  font-size: 22px;
+  color: #2c2c2a;
 }
 
 .grid-container {
@@ -132,21 +142,24 @@ export default {
   background: #ffffff;
   padding: 20px;
   border-radius: 14px;
-  border: 1px solid #e0e0e0;
+  border: 0.5px solid #e8e8f0;
   box-shadow: 0 6px 15px rgba(0,0,0,0.06);
 }
 
 .employee-table h2 {
   text-align: center;
   margin-bottom: 10px;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c2c2a;
 }
 
 .employee-table h3 {
   margin-top: 15px;
-  font-size: 16px;
-  color: #333;
+  font-size: 13px;
+  color: #888780;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 table {
@@ -157,42 +170,40 @@ table {
 
 th {
   text-align: left;
-  font-size: 13px;
-  color: #555;
+  font-size: 11px;
+  color: #888780;
   padding-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 td {
   padding: 6px 0;
-  font-size: 14px;
+  font-size: 13px;
+  color: #2c2c2a;
+  border-bottom: 0.5px solid #f4f4f4;
 }
 
-.attendance-row {
-  background-color: #f1f8ff;
-}
-
-.leave-row {
-  background-color: #fff7eb;
-}
+.attendance-row { background-color: #f8fbff; }
+.leave-row { background-color: #fffbf5; }
 
 .status-badge {
-  padding: 5px 12px;
-  border-radius: 14px;
-  color: #fff;
-  font-size: 12px;
-  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
   display: inline-block;
 }
 
-.status-badge.present { background: #2e7d32; }
-.status-badge.absent { background: #c62828; }
-.status-badge.pending { background: #f9a825; }
-.status-badge.denied { background: #8e0000; }
-.status-badge.approved { background: #1565c0; }
+.status-badge.present { background: #eaf3de; color: #3b6d11; }
+.status-badge.absent { background: #fcebeb; color: #a32d2d; }
+.status-badge.pending { background: #faeeda; color: #854f0b; }
+.status-badge.denied { background: #fcebeb; color: #a32d2d; }
+.status-badge.approved { background: #e6f1fb; color: #185fa5; }
 
 .btn-approve {
-  background: #1565c0;
-  color: white;
+  background: #e6f1fb;
+  color: #185fa5;
   border: none;
   padding: 4px 10px;
   border-radius: 6px;
@@ -202,8 +213,8 @@ td {
 }
 
 .btn-deny {
-  background: #8e0000;
-  color: white;
+  background: #fcebeb;
+  color: #a32d2d;
   border: none;
   padding: 4px 10px;
   border-radius: 6px;
