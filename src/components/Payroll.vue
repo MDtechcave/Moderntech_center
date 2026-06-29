@@ -3,65 +3,90 @@
   <div class="payroll-page">
     <div class="payroll-header">
       <h1>Payroll</h1>
-      <p class="payroll-sub">Monthly payslips for all employees</p>
+      <p class="payroll-sub">Click an employee to view their payslip</p>
     </div>
 
     <LoadingSpinner v-if="loading" message="Calculating payroll..." />
 
-    <div class="payroll-grid" v-else>
-      <div
-        v-for="employee in payslips"
-        :key="employee.employee_id"
-        class="payslip-card"
-      >
-        <div class="payslip-card-header">
-          <div class="employee-avatar">
-            {{ employee.name.charAt(0) }}
-          </div>
+    <div class="payroll-layout" v-else>
+      <!-- Employee List -->
+      <div class="employee-list">
+        <div
+          v-for="employee in payslips"
+          :key="employee.employee_id"
+          class="emp-row"
+          :class="{ active: selected && selected.employee_id === employee.employee_id }"
+          @click="selected = employee"
+        >
+          <div class="emp-avatar">{{ employee.name.charAt(0) }}</div>
           <div>
-            <div class="employee-name">{{ employee.name }}</div>
-            <div class="employee-meta">{{ employee.position }} — {{ employee.department }}</div>
+            <div class="emp-name">{{ employee.name }}</div>
+            <div class="emp-dept">{{ employee.department }}</div>
+          </div>
+          <span class="emp-arrow">›</span>
+        </div>
+      </div>
+
+      <!-- Payslip View -->
+      <div class="payslip-view" v-if="selected">
+        <div class="payslip-card">
+          <div class="ps-header">
+            <div class="ps-avatar">{{ selected.name.charAt(0) }}</div>
+            <div>
+              <div class="ps-name">{{ selected.name }}</div>
+              <div class="ps-meta">{{ selected.position }} — {{ selected.department }}</div>
+              <div class="ps-meta">{{ selected.contact }}</div>
+            </div>
+            <button class="dl-btn" @click="downloadPayslip(selected)">
+              <i class="ti ti-download" aria-hidden="true"></i>
+              Download
+            </button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="ps-stats">
+            <div class="ps-stat">
+              <div class="ps-stat-val">{{ selected.present_days }}</div>
+              <div class="ps-stat-lbl">Present</div>
+            </div>
+            <div class="ps-stat">
+              <div class="ps-stat-val red">{{ selected.absent_days }}</div>
+              <div class="ps-stat-lbl">Absent</div>
+            </div>
+            <div class="ps-stat">
+              <div class="ps-stat-val">{{ selected.approved_leave }}</div>
+              <div class="ps-stat-lbl">Leave</div>
+            </div>
+            <div class="ps-stat">
+              <div class="ps-stat-val">{{ selected.total_days }}</div>
+              <div class="ps-stat-lbl">Working days</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="salary-breakdown">
+            <div class="salary-row">
+              <span>Base salary</span>
+              <span>R{{ selected.salary.toLocaleString() }}</span>
+            </div>
+            <div class="salary-row">
+              <span>Deduction for absences</span>
+              <span class="red">- R{{ selected.deduction.toLocaleString() }}</span>
+            </div>
+            <div class="salary-row final">
+              <span>Final salary</span>
+              <span class="green">R{{ selected.final_salary.toLocaleString() }}</span>
+            </div>
           </div>
         </div>
+      </div>
 
-        <div class="divider"></div>
-
-        <div class="payslip-stats">
-          <div class="stat-item">
-            <span class="stat-label">Present</span>
-            <span class="stat-val">{{ employee.present_days }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Absent</span>
-            <span class="stat-val red">{{ employee.absent_days }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Leave</span>
-            <span class="stat-val">{{ employee.approved_leave }}</span>
-          </div>
-        </div>
-
-        <div class="divider"></div>
-
-        <div class="salary-breakdown">
-          <div class="salary-row">
-            <span>Base salary</span>
-            <span>R{{ employee.salary.toLocaleString() }}</span>
-          </div>
-          <div class="salary-row">
-            <span>Deduction</span>
-            <span class="red">- R{{ employee.deduction.toLocaleString() }}</span>
-          </div>
-          <div class="salary-row final">
-            <span>Final salary</span>
-            <span class="green">R{{ employee.final_salary.toLocaleString() }}</span>
-          </div>
-        </div>
-
-        <button class="download-btn" @click="downloadPayslip(employee)">
-          <i class="ti ti-download" aria-hidden="true"></i>
-          Download payslip
-        </button>
+      <!-- Empty state -->
+      <div class="empty-state" v-else>
+        <i class="ti ti-hand-click" style="font-size:36px;color:#888780;" aria-hidden="true"></i>
+        <p>Select an employee to view their payslip</p>
       </div>
     </div>
   </div>
@@ -76,6 +101,7 @@ export default {
   data() {
     return {
       payslips: [],
+      selected: null,
       loading: true
     }
   },
@@ -145,36 +171,46 @@ Generated on: ${new Date().toLocaleDateString()}
   color: #888780;
 }
 
-.payroll-grid {
+.payroll-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: 300px 1fr;
   gap: 16px;
+  align-items: start;
 }
 
-.payslip-card {
+.employee-list {
   background: #ffffff;
   border: 0.5px solid #e8e8f0;
   border-radius: 12px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  overflow: hidden;
 }
 
-.payslip-card-header {
+.emp-row {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-bottom: 0.5px solid #e8e8f0;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
-.employee-avatar {
-  width: 42px;
-  height: 42px;
+.emp-row:last-child { border-bottom: none; }
+
+.emp-row:hover { background: #f4f6f8; }
+
+.emp-row.active {
+  background: #e6f1fb;
+  border-left: 3px solid #185fa5;
+}
+
+.emp-avatar {
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #e6f1fb;
   color: #185fa5;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -182,53 +218,115 @@ Generated on: ${new Date().toLocaleDateString()}
   flex-shrink: 0;
 }
 
-.employee-name {
-  font-size: 14px;
+.emp-name {
+  font-size: 13px;
   font-weight: 500;
   color: #2c2c2a;
 }
 
-.employee-meta {
+.emp-dept {
+  font-size: 11px;
+  color: #888780;
+  margin-top: 1px;
+}
+
+.emp-arrow {
+  margin-left: auto;
+  color: #888780;
+  font-size: 18px;
+}
+
+.payslip-card {
+  background: #ffffff;
+  border: 0.5px solid #e8e8f0;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.ps-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.ps-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e6f1fb;
+  color: #185fa5;
+  font-size: 18px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ps-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c2c2a;
+  margin-bottom: 3px;
+}
+
+.ps-meta {
   font-size: 12px;
   color: #888780;
-  margin-top: 2px;
+  margin-bottom: 2px;
 }
+
+.dl-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 8px 14px;
+  background: #e6f1fb;
+  color: #185fa5;
+  border: none;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  width: auto;
+  white-space: nowrap;
+}
+
+.dl-btn:hover { background: #b5d4f4; }
 
 .divider {
   border: none;
   border-top: 0.5px solid #e8e8f0;
-  margin: 14px 0;
+  margin: 16px 0;
 }
 
-.payslip-stats {
+.ps-stats {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
+.ps-stat { text-align: center; }
 
-.stat-label {
-  font-size: 11px;
-  color: #888780;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.stat-val {
-  font-size: 18px;
+.ps-stat-val {
+  font-size: 24px;
   font-weight: 500;
   color: #2c2c2a;
+}
+
+.ps-stat-lbl {
+  font-size: 11px;
+  color: #888780;
+  margin-top: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .salary-breakdown {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
 }
 
 .salary-row {
@@ -239,33 +337,26 @@ Generated on: ${new Date().toLocaleDateString()}
 }
 
 .salary-row.final {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
-  margin-top: 4px;
-  padding-top: 8px;
+  padding-top: 10px;
   border-top: 0.5px solid #e8e8f0;
 }
 
 .red { color: #a32d2d; }
 .green { color: #3b6d11; }
 
-.download-btn {
+.empty-state {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  margin-top: 16px;
-  padding: 9px;
-  background: #e6f1fb;
-  color: #185fa5;
-  border: none;
-  border-radius: 8px;
+  gap: 12px;
+  padding: 80px;
+  color: #888780;
   font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  width: 100%;
-  transition: background 0.2s;
+  background: #ffffff;
+  border: 0.5px solid #e8e8f0;
+  border-radius: 12px;
 }
-
-.download-btn:hover { background: #b5d4f4; }
 </style>
