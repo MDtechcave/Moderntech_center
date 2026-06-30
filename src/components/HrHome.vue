@@ -1,356 +1,241 @@
 <template>
-  <div class="dashboard">
-    <div v-if="role === 'admin'">
-      <h1 class="dashboard-title">Admin Dashboard</h1>
+  <div class="home-page">
+    <LoadingSpinner v-if="loading" message="Loading..." />
 
-      <div class="stats-grid">
-        <div class="stat-card">
-          <p class="stat-label">Total Employees</p>
-          <h2 class="stat-value">{{ stats.total_employees }}</h2>
+    <div v-else>
+      <!-- ADMIN -->
+      <div v-if="role === 'admin'">
+        <div class="greeting-card">
+          <div>
+            <div class="greeting-main">Admin Dashboard</div>
+            <div class="greeting-sub">ModernTech Center HR System</div>
+          </div>
+          <div class="date-badge">{{ today }}</div>
         </div>
-        <div class="stat-card">
-          <p class="stat-label">Present Today</p>
-          <h2 class="stat-value">{{ stats.present_today }}</h2>
+
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-val">{{ stats.total_employees }}</div>
+            <div class="stat-lbl">Total employees</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-val">{{ stats.present_today }}</div>
+            <div class="stat-lbl">Present today</div>
+          </div>
+          <div class="stat-card yellow">
+            <div class="stat-val">{{ stats.pending_leave_requests }}</div>
+            <div class="stat-lbl">Pending leave</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-val">R{{ stats.total_monthly_payroll ? stats.total_monthly_payroll.toLocaleString() : 0 }}</div>
+            <div class="stat-lbl">Monthly payroll</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <p class="stat-label">Pending Leave Requests</p>
-          <h2 class="stat-value">{{ stats.pending_leave_requests }}</h2>
-        </div>
-        <div class="stat-card">
-          <p class="stat-label">Total Monthly Payroll</p>
-          <h2 class="stat-value">R{{ stats.total_monthly_payroll ? stats.total_monthly_payroll.toLocaleString() : 0 }}</h2>        </div>
       </div>
 
-      <div class="quick-links">
-        <h3>Quick Links</h3>
-        <div class="links-grid">
-          <router-link to="/employees" class="link-card">Employee Management</router-link>
-          <router-link to="/attendance" class="link-card">Attendance</router-link>
-          <router-link to="/payroll" class="link-card">Payroll</router-link>
-          <router-link to="/workreviews" class="link-card">Reviews</router-link>
+      <!-- EMPLOYEE -->
+      <div v-else>
+        <div class="greeting-card">
+          <div>
+            <div class="greeting-main">{{ greeting }}, {{ stats.name }} 👋</div>
+            <div class="greeting-sub">{{ stats.position }} — {{ stats.department }} · ModernTech Center</div>
+          </div>
+          <div class="date-badge">{{ today }}</div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-val">{{ stats.present_days }}</div>
+            <div class="stat-lbl">Days present</div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-val">{{ stats.absent_days }}</div>
+            <div class="stat-lbl">Days absent</div>
+          </div>
+          <div class="stat-card yellow">
+            <div class="stat-val">{{ stats.pending_leave }}</div>
+            <div class="stat-lbl">Pending leave</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-val">R{{ stats.final_salary ? stats.final_salary.toLocaleString() : 0 }}</div>
+            <div class="stat-lbl">Final salary</div>
+          </div>
+        </div>
+
+        <div class="clockin-section">
+          <div class="clockin-card">
+            <div>
+              <div class="clockin-title">{{ clockedIn ? 'You are clocked in today ✓' : 'Not clocked in yet' }}</div>
+              <div class="clockin-sub">{{ clockedIn ? 'Attendance recorded for today' : 'Press the button to record your attendance' }}</div>
+            </div>
+            <button
+              class="clockin-btn"
+              :class="{ clocked: clockedIn }"
+              @click="clockIn"
+              :disabled="clockedIn"
+            >
+              {{ clockedIn ? 'Clocked In' : 'Clock In' }}
+            </button>
+          </div>
         </div>
       </div>
     </div>
-
-<div v-else>
-  <h1 class="dashboard-title">Welcome, {{ stats.name }}</h1>
-  <p class="subtitle">{{ stats.position }} — {{ stats.department }}</p>
-
-  <div class="stats-grid">
-    <div class="stat-card">
-      <p class="stat-label">Days Present</p>
-      <h2 class="stat-value">{{ stats.present_days }}</h2>
-    </div>
-    <div class="stat-card">
-      <p class="stat-label">Days Absent</p>
-      <h2 class="stat-value">{{ stats.absent_days }}</h2>
-    </div>
-    <div class="stat-card">
-      <p class="stat-label">Approved Leave</p>
-      <h2 class="stat-value">{{ stats.approved_leave }}</h2>
-    </div>
-    <div class="stat-card">
-      <p class="stat-label">Pending Leave</p>
-      <h2 class="stat-value">{{ stats.pending_leave }}</h2>
-    </div>
-    <div class="stat-card">
-      <p class="stat-label">Final Salary</p>
-      <h2 class="stat-value">R{{ stats.final_salary ? stats.final_salary.toLocaleString() : 0 }}</h2>
-    </div>
   </div>
-
-  <div class="leave-form">
-  <h3>Submit Leave Request</h3>
-  <div class="field">
-    <label>Date</label>
-    <input type="date" v-model="leaveForm.date" />
-  </div>
-  <div class="field">
-    <label>Reason</label>
-    <select v-model="leaveForm.reason">
-      <option disabled value="">Select reason</option>
-      <option>Sick Leave</option>
-      <option>Vacation</option>
-      <option>Family Responsibility</option>
-      <option>Medical Appointment</option>
-      <option>Bereavement</option>
-      <option>Childcare</option>
-      <option>Personal</option>
-    </select>
-  </div>
-  <p v-if="leaveSuccess" style="color: green;">Leave request submitted successfully!</p>
-  <button @click="submitLeave">Submit Leave Request</button>
-</div>
-
-  <div class="leave-section">
-    <h3>My Leave Requests</h3>
-    <table class="leave-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Reason</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="leave in stats.leave_requests" :key="leave.id">
-          <td>{{ leave.date }}</td>
-          <td>{{ leave.reason }}</td>
-          <td>
-            <span class="status-badge" :class="leave.status.toLowerCase()">
-              {{ leave.status }}
-            </span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-</div>
 </template>
 
 <script>
 import axios from 'axios'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 export default {
-  name: "HrHome",
+  name: 'HrHome',
+  components: { LoadingSpinner },
   data() {
     return {
       role: localStorage.getItem('role') || 'employee',
-      email: localStorage.getItem('user') || '',
-      stats: {
-        total_days: 0,
-        present_days: 0,
-        absent_days: 0,
-        approved_leave: 0,
-        pending_leave: 0,
-        salary: 0,
-        deduction: 0,
-        final_salary: 0,
-        leave_requests: []
-      },
-      leaveForm: {
-        date: '',
-        reason: ''
-      },
-      leaveSuccess: false
+      loading: true,
+      stats: {},
+      clockedIn: false,
+      today: new Date().toLocaleDateString('en-ZA', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })
+    }
+  },
+  computed: {
+    greeting() {
+      const hour = new Date().getHours()
+      if (hour < 12) return 'Good morning'
+      if (hour < 17) return 'Good afternoon'
+      return 'Good evening'
     }
   },
   async mounted() {
-    if (this.role === 'admin') {
-      try {
-        const response = await axios.get('http://127.0.0.1:8000/dashboard/admin')
+    try {
+      if (this.role === 'admin') {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/dashboard/admin`)
         this.stats = response.data
-      } catch (error) {
-        console.error('Failed to fetch dashboard stats:', error)
-      }
-    } else {
-      try {
+      } else {
         const employeeId = localStorage.getItem('employee_id')
-        const response = await axios.get(`http://127.0.0.1:8000/dashboard/employee/${employeeId}`)
-        this.stats = response.data
-      } catch (error) {
-        console.error('Failed to fetch employee stats:', error)
+        const [statsRes, attRes] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_URL}/dashboard/employee/${employeeId}`),
+          axios.get(`${import.meta.env.VITE_API_URL}/attendance/${employeeId}`)
+        ])
+        this.stats = statsRes.data
+        const today = new Date().toISOString().split('T')[0]
+        const todayRecord = attRes.data.find(a => a.date === today)
+        if (todayRecord) this.clockedIn = true
       }
+    } catch (error) {
+      console.error('Failed to fetch dashboard stats:', error)
+    } finally {
+      this.loading = false
     }
   },
   methods: {
-    async submitLeave() {
-      if (!this.leaveForm.date || !this.leaveForm.reason) {
-        alert('Please fill out all fields')
-        return
-      }
-
+    async clockIn() {
       try {
-        await axios.post('http://127.0.0.1:8000/attendance/leave', {
-          employee_id: parseInt(localStorage.getItem('employee_id')),
-          date: this.leaveForm.date,
-          reason: this.leaveForm.reason
+        const employeeId = parseInt(localStorage.getItem('employee_id'))
+        await axios.post(`${import.meta.env.VITE_API_URL}/attendance/clockin`, {
+          employee_id: employeeId
         })
-
-        this.leaveSuccess = true
-        this.leaveForm.date = ''
-        this.leaveForm.reason = ''
-
-        const employeeId = localStorage.getItem('employee_id')
-        const response = await axios.get(`http://127.0.0.1:8000/dashboard/employee/${employeeId}`)
-        this.stats = response.data
+        this.clockedIn = true
       } catch (error) {
-        console.error('Failed to submit leave:', error)
-        alert('Failed to submit leave request')
+        console.error('Failed to clock in:', error)
       }
     }
   }
 }
 </script>
+
 <style>
-.dashboard {
+.home-page {
   padding: 30px;
-  background: #f4f6f8;
-  min-height: calc(100vh - 56px);
-  max-width: 1100px;
+  max-width: 1000px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.dashboard-title {
-  font-weight: 700;
-  margin-bottom: 25px;
+.greeting-card {
+  background: #ffffff;
+  border: 0.5px solid #e8e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.greeting-main { font-size: 20px; font-weight: 500; color: #2c2c2a; margin-bottom: 4px; }
+.greeting-sub { font-size: 13px; color: #888780; }
+
+.date-badge {
+  font-size: 11px;
+  color: #888780;
+  background: #f4f6f8;
+  border: 0.5px solid #e8e8f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
 }
 
 .stat-card {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-  text-align: center;
-}
-
-.stat-label {
-  color: #6b7280;
-  font-size: 14px;
-  margin-bottom: 8px;
-}
-
-.stat-value {
-  color: #1e3a8a;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-.quick-links h3 {
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.links-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 15px;
-}
-
-.link-card {
-  background: #1e3a8a;
-  color: white;
-  padding: 15px;
+  background: #ffffff;
+  border: 0.5px solid #e8e8f0;
   border-radius: 10px;
-  text-align: center;
-  text-decoration: none;
-  font-weight: 600;
-  transition: background 0.2s;
+  padding: 20px 16px;
 }
 
-.link-card:hover {
-  background: #2563eb;
-}
+.stat-val { font-size: 26px; font-weight: 500; color: #2c2c2a; }
+.stat-lbl { font-size: 11px; color: #888780; margin-top: 4px; }
 
-.subtitle {
-  color: #6b7280;
-}
+.stat-card.blue { border-color: #b5d4f4; }
+.stat-card.blue .stat-val { color: #185fa5; }
+.stat-card.green { border-color: #b8dca0; }
+.stat-card.green .stat-val { color: #3b6d11; }
+.stat-card.red { border-color: #f4b5b5; }
+.stat-card.red .stat-val { color: #a32d2d; }
+.stat-card.yellow { border-color: #f4dfa0; }
+.stat-card.yellow .stat-val { color: #854f0b; }
 
-.leave-section {
-  margin-top: 30px;
-  background: white;
-  padding: 20px;
+.clockin-section { margin-top: 4px; }
+
+.clockin-card {
+  background: #ffffff;
+  border: 0.5px solid #e8e8f0;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.leave-section h3 {
-  margin-bottom: 15px;
-  font-weight: 600;
-}
+.clockin-title { font-size: 15px; font-weight: 500; color: #2c2c2a; margin-bottom: 4px; }
+.clockin-sub { font-size: 12px; color: #888780; }
 
-.leave-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.leave-table th {
-  background: #1e3a8a;
-  color: white;
-  padding: 10px;
-  text-align: left;
-}
-
-.leave-table td {
-  padding: 10px;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.status-badge.approved { background:
-   #1565c0; 
-  }
-.status-badge.pending { background:
-   #f9a825; 
-  }
-.status-badge.denied { background:
-   #8e0000; 
-  }
-
-  .leave-form {
-  margin-top: 30px;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
-}
-
-.leave-form h3 {
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.leave-form .field {
-  margin-bottom: 15px;
-}
-
-.leave-form label {
-  display: block;
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.leave-form input,
-.leave-form select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-}
-
-.leave-form button {
-  width: 100%;
-  padding: 12px;
-  background: #1e3a8a;
+.clockin-btn {
+  padding: 10px 24px;
+  background: #185fa5;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 10px;
+  width: auto;
+  transition: background 0.2s;
 }
 
-.leave-form button:hover {
-  background: #2563eb;
-}
-
+.clockin-btn:hover { background: #0c447c; }
+.clockin-btn.clocked { background: #3b6d11; cursor: not-allowed; }
 </style>

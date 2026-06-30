@@ -75,7 +75,7 @@ export default {
   async mounted() {
     try {
       const employeeId = localStorage.getItem('employee_id')
-      const response = await axios.get(`http://127.0.0.1:8000/dashboard/employee/${employeeId}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/dashboard/employee/${employeeId}`)
       this.payslip = response.data
     } catch (error) {
       console.error('Failed to fetch payslip:', error)

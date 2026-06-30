@@ -65,7 +65,7 @@ export default {
   async mounted() {
     try {
       const employeeId = localStorage.getItem('employee_id')
-      const response = await axios.get(`http://127.0.0.1:8000/attendance/${employeeId}`)
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/attendance/${employeeId}`)
       this.attendance = response.data.sort((a, b) => new Date(b.date) - new Date(a.date))
     } catch (error) {
       console.error('Failed to fetch attendance:', error)

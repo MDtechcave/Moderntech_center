@@ -109,8 +109,8 @@ export default {
       try {
         const employeeId = localStorage.getItem('employee_id')
         const [dashRes, balanceRes] = await Promise.all([
-          axios.get(`http://127.0.0.1:8000/dashboard/employee/${employeeId}`),
-          axios.get(`http://127.0.0.1:8000/attendance/leave/balance/${employeeId}`)
+          axios.get(`${import.meta.env.VITE_API_URL}/dashboard/employee/${employeeId}`),
+          axios.get(`${import.meta.env.VITE_API_URL}/attendance/leave/balance/${employeeId}`)
         ])
         this.leaveRequests = dashRes.data.leave_requests
         this.balance = balanceRes.data
@@ -124,7 +124,7 @@ export default {
         return
       }
       try {
-        await axios.post('http://127.0.0.1:8000/attendance/leave', {
+        await axios.post(`${import.meta.env.VITE_API_URL}/attendance/leave`, {
           employee_id: parseInt(localStorage.getItem('employee_id')),
           date: this.form.date,
           reason: this.form.reason

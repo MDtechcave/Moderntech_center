@@ -88,9 +88,9 @@ export default {
       this.loading = true
       try {
         const [attendanceRes, leaveRes, employeesRes] = await Promise.all([
-          axios.get('http://127.0.0.1:8000/attendance/'),
-          axios.get('http://127.0.0.1:8000/attendance/leave'),
-          axios.get('http://127.0.0.1:8000/employees/')
+          axios.get(`${import.meta.env.VITE_API_URL}/attendance/`),
+          axios.get(`${import.meta.env.VITE_API_URL}/attendance/leave`),
+          axios.get(`${import.meta.env.VITE_API_URL}/employees/`)
         ])
 
         this.attendanceAndLeave = employeesRes.data.map(emp => ({
@@ -107,7 +107,7 @@ export default {
     },
     async updateLeave(leaveId, status) {
       try {
-        await axios.patch(`http://127.0.0.1:8000/attendance/leave/${leaveId}`, { status })
+        await axios.patch(`${import.meta.env.VITE_API_URL}/attendance/leave/${leaveId}`, { status })
         await this.fetchData()
       } catch (error) {
         console.error('Failed to update leave:', error)

@@ -85,7 +85,7 @@ export default {
       this.successMessage = ''
 
       try {
-        await axios.post('http://127.0.0.1:8000/employees/', {
+        await axios.post(`${import.meta.env.VITE_API_URL}/employees/`, {
           name: this.form.name,
           position: this.form.position,
           department: this.form.department,

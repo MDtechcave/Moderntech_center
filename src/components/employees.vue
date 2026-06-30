@@ -9,7 +9,9 @@
         </router-link>
       </div>
 
-      <table class="employee-table">
+      <LoadingSpinner v-if="loading" message="Fetching employees..." />
+
+      <table class="employee-table" v-else>
         <thead>
           <tr>
             <th>Name</th>
@@ -37,19 +39,24 @@
 
 <script>
 import axios from 'axios'
+import LoadingSpinner from './LoadingSpinner.vue'
 
 export default {
+  components: { LoadingSpinner },
   data() {
     return {
-      employees: []
+      employees: [],
+      loading: true
     }
   },
   async mounted() {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/employees/')
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/employees/`)
       this.employees = response.data
     } catch (error) {
       console.error('Failed to fetch employees:', error)
+    } finally {
+      this.loading = false
     }
   }
 }
