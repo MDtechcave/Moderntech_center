@@ -243,6 +243,7 @@ Generated on: ${new Date().toLocaleDateString()}
   font-size: 18px;
   font-weight: 500;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
